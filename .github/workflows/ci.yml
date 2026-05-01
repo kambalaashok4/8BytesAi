@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./app
+        working-directory: app
 
     steps:
       - name: Checkout code
@@ -29,19 +29,19 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        working-directory: ./app
+        working-directory: app
         run: npm ci
 
       - name: Run tests
         run: npm test
-        working-directory: ./app
+        working-directory: app
 
   build-and-push:
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./app
+        working-directory: app
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
