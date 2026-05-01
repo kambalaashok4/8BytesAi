@@ -13,6 +13,7 @@ env:
   IMAGE_NAME: Simple-app   # change this
   AWS_REGION: us-east-1
   ECR_REPOSITORY: eks/profile
+  GH_TOKEN : ${{ secrets.GH_PAT }}   # for passing data to CD via repo variables
 
 jobs:
 
@@ -77,7 +78,7 @@ jobs:
       - name: Login to Amazon ECR
         id: ecr-login
         uses: aws-actions/amazon-ecr-login@v2
-        
+
       - name: Set up Docker Buildxx
         uses: docker/setup-buildx-action@v3
 
@@ -92,17 +93,17 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  trigger-cd:
-    name: Trigger CD Pipeline
-    runs-on: ubuntu-latest
-    needs: build-and-push
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  # trigger-cd:
+  #   name: Trigger CD Pipeline
+  #   runs-on: ubuntu-latest
+  #   needs: build-and-push
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
-    steps:
-      - name: Pass image tag to CD via repository variable
-        env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}   
-        run: |
-          gh variable set IMAGE_TAG \
-            --body "${{ needs.build-and-push.outputs.image_tag }}" \
-            --repo "${{ github.repository }}"
+  #   steps:
+  #     - name: Pass image tag to CD via repository variable
+  #       env:
+  #         GH_TOKEN: ${{ secrets.GH_PAT }}   
+  #       run: |
+  #         gh variable set IMAGE_TAG \
+  #           --body "${{ needs.build-and-push.outputs.image_tag }}" \
+  #           --repo "${{ github.repository }}"
