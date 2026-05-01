@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 env:
-  IMAGE_NAME: your-app   # change this
+  IMAGE_NAME: Simple-app   # change this
 
 jobs:
 
