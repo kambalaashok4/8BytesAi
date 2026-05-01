@@ -1,16 +1,16 @@
 
 #FROM node:16
-FROM  node:18-slim
+FROM  node:20-slim
 
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY /app/package*.json ./
 
 
 RUN npm install
 
-COPY ./app/ .
+COPY /app/ .
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
 
