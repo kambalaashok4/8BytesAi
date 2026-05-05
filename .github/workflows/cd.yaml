@@ -19,44 +19,44 @@ env:
   IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
 jobs:
 
-  deploy-staging:
-    name: Deploy to Staging
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'pull_request'
-    ##if: ${{ github.event.workflow_run.conclusion == 'success' }} &&
+  # deploy-staging:
+  #   name: Deploy to Staging
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main' && github.event_name == 'pull_request'
+  #   ##if: ${{ github.event.workflow_run.conclusion == 'success' }} &&
 
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::870388460414:role/github-actions-deploy
-          aws-region: ${{ env.AWS_REGION }}
-      - name: Login to Amazon ECR
-        id: ecr-login
-        uses: aws-actions/amazon-ecr-login@v2
+  #   steps:
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         role-to-assume: arn:aws:iam::870388460414:role/github-actions-deploy
+  #         aws-region: ${{ env.AWS_REGION }}
+  #     - name: Login to Amazon ECR
+  #       id: ecr-login
+  #       uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Fetch current task definition
-        run: |
-          aws ecs describe-task-definition \
-            --task-definition ${{ env.TASK_DEFINITION }} \
-            --query taskDefinition \
-            > task-def.json
+  #     - name: Fetch current task definition
+  #       run: |
+  #         aws ecs describe-task-definition \
+  #           --task-definition ${{ env.TASK_DEFINITION }} \
+  #           --query taskDefinition \
+  #           > task-def.json
 
-      - name: Update image tag in task definition
-        id: update-task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-def.json
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+  #     - name: Update image tag in task definition
+  #       id: update-task-def
+  #       uses: aws-actions/amazon-ecs-render-task-definition@v1
+  #       with:
+  #         task-definition: task-def.json
+  #         container-name: ${{ env.CONTAINER_NAME }}
+  #         image: ${{ steps.ecr-login.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
-      - name: Register updated task definition and deploy to staging
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.update-task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE_STAGING }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
+  #     - name: Register updated task definition and deploy to staging
+  #       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+  #       with:
+  #         task-definition: ${{ steps.update-task-def.outputs.task-definition }}
+  #         service: ${{ env.ECS_SERVICE_STAGING }}
+  #         cluster: ${{ env.ECS_CLUSTER }}
+  #         wait-for-service-stability: true
 
   approve-production:
     name: Manual Approval for Production
