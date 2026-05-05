@@ -12,7 +12,7 @@ env:
   AWS_REGION: us-east-2                  
   ECS_CLUSTER: ecs-cw-demo-cluster            
   ECS_SERVICE_STAGING: ecs-cw-demo-staging   
-  ECS_SERVICE_PROD: ecs-cw-demo-prod      
+  ECS_SERVICE_PROD: ecs-cw-demo-service     
   TASK_DEFINITION: ecs-cw-demo-task         
   CONTAINER_NAME:  ecs-cw-demo
   ECR_REPOSITORY: eks/profile
