@@ -1,26 +1,24 @@
-# ---------------------------------------------------------------------------
-# Data
-# ---------------------------------------------------------------------------
+
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
 # Route 53 Hosted Zone (name provided by the user)
 
-resource "aws_route53_zone" "main" {
-  name = var.hosted_zone_name
-
-  tags = { Name = "${var.project_name}-zone" }
-}
-
-# data "aws_route53_zone" "main" {
+# resource "aws_route53_zone" "main" {
 #   name = var.hosted_zone_name
+
+#   tags = { Name = "${var.project_name}-zone" }
 # }
+
+data "aws_route53_zone" "main" {
+  name = "ashokkambala.xyz"
+}
 
 # ACM Certificate (issued for the hosted zone domain)
 
 resource "aws_acm_certificate" "main" {
-  domain_name       = aws_route53_zone.main.name
+  domain_name       = data.aws_route53_zone.main.name
   validation_method = "DNS"
 
   lifecycle {
@@ -42,7 +40,7 @@ resource "aws_route53_record" "cert_validation" {
     }
   }
 
-  zone_id = aws_route53_zone.main.zone_id
+  zone_id = data.aws_route53_zone.main.zone_id
   name    = each.value.name
   type    = each.value.type
   ttl     = 300
@@ -214,4 +212,5 @@ resource "aws_alb_listener" "https" {
   }
   ssl_policy      = "ELBSecurityPolicy-TLS13-1-2-Res-PQ-2025-09"
   certificate_arn = aws_acm_certificate_validation.main.certificate_arn
+  depends_on = [aws_acm_certificate_validation.main]
 }

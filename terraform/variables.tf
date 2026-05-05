@@ -13,7 +13,7 @@ variable "project_name" {
 variable "container_image" {
   description = "Docker image to run in the ECS task"
   type        = string
-  default     = "cicd:latest"
+  default     = "nginx:latest"
   #"nginx:latest"
 }
 

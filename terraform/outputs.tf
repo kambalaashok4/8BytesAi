@@ -38,17 +38,4 @@ output "autoscaling_cpu_target" {
   value       = var.autoscaling_cpu_target
 }
 
-output "route53_zone_name" {
-  description = "Name of the randomly generated Route 53 hosted zone"
-  value       = module.networking.route53_zone_name
-}
 
-output "route53_zone_id" {
-  description = "ID of the Route 53 hosted zone"
-  value       = module.networking.route53_zone_id
-}
-
-output "acm_certificate_arn" {
-  description = "ARN of the ACM SSL certificate attached to the HTTPS listener"
-  value       = module.networking.acm_certificate_arn
-}

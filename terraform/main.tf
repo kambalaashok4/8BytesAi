@@ -3,7 +3,7 @@ module "networking" {
 
   project_name     = var.project_name
   container_port   = var.container_port
-  hosted_zone_name = var.hosted_zone_name
+  hosted_zone_name = "ashokkambala.xyz"
 }
 
 module "iam" {
