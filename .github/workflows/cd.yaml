@@ -9,12 +9,12 @@ permissions:
   id-token: write
   contents: read
 env:
-  AWS_REGION: us-east-1                  
-  ECS_CLUSTER: ecs-cw-demo               
+  AWS_REGION: us-east-2                  
+  ECS_CLUSTER: ecs-cw-demo-cluster            
   ECS_SERVICE_STAGING: ecs-cw-demo-staging   
   ECS_SERVICE_PROD: ecs-cw-demo-prod      
-  TASK_DEFINITION: ecs-cw-demo-def         
-  CONTAINER_NAME: cicd-container
+  TASK_DEFINITION: ecs-cw-demo-task         
+  CONTAINER_NAME: app-container
   ECR_REPOSITORY: eks/profile
   IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
 jobs:
@@ -61,10 +61,13 @@ jobs:
     name: Manual Approval for Production
     runs-on: ubuntu-latest
     needs: deploy-staging
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+
 
     steps:
       - name: Waiting for approval
-        run: echo "Approved — proceeding to production deploy."
+        run: echo "Approved proceeding to production deploy."
 
   deploy-production:
     name: Deploy to Production
