@@ -14,7 +14,7 @@ env:
   ECS_SERVICE_STAGING: ecs-cw-demo-staging   
   ECS_SERVICE_PROD: ecs-cw-demo-prod      
   TASK_DEFINITION: ecs-cw-demo-task         
-  CONTAINER_NAME: app-container
+  CONTAINER_NAME:  ecs-cw-demo
   ECR_REPOSITORY: eks/profile
   IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
 jobs:
